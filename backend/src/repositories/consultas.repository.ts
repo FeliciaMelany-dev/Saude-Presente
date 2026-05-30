@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-import { Prisma } from "../generated/prisma/client.js";
+import { StatusConsulta} from "../generated/prisma/client.js";
 
 export class ConsultaRepository {
   async findById(id: string) {
@@ -8,7 +8,18 @@ export class ConsultaRepository {
     });
   }
 
-  async create(){
-    
+  async create(data:{
+    paciente_id: string,
+    medico_id:string,
+    dataHoraConsulta: Date
+  }){
+    return await prisma.consulta.create({data})
+  }
+
+  async updateStatus(id:string, status: StatusConsulta){
+    return prisma.consulta.update({
+        where: {id},
+        data:{status},
+    })
   }
 }
