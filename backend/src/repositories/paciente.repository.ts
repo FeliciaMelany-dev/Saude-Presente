@@ -3,19 +3,19 @@ import { Prisma } from "../generated/prisma/client.js";
 
 export class PacienteRepository {
   async findByEmail(email: string) {
-    return await prisma.paciente.findUnique({
+    return prisma.paciente.findUnique({
       where: { email },
     });
   }
 
   async findById(id: string) {
-    return await prisma.paciente.findUnique({
+    return prisma.paciente.findUnique({
       where: { id },
     });
   }
 
   async getAll() {
-    return await prisma.paciente.findMany({}); //adicionar paginação futuramente
+    return prisma.paciente.findMany({}); //adicionar paginação futuramente
   }
 
   async create(data: {
@@ -24,24 +24,24 @@ export class PacienteRepository {
     email: string;
     data_nascimento: Date;
   }) {
-    return await prisma.paciente.create({ data });
+    return prisma.paciente.create({ data });
   }
 
   async update(id: string, data: Prisma.PacienteUpdateInput) {
-    return await prisma.paciente.update({
+    return prisma.paciente.update({
       where: { id },
       data,
     });
   }
 
   async delete(id: string) {
-    await prisma.paciente.delete({
+    prisma.paciente.delete({
       where: { id },
     });
   }
 
   async findByIdWithConsultas(id: string) {
-    return await prisma.paciente.findUnique({
+    return prisma.paciente.findUnique({
       where: { id },
       include: {
         consultas: true,
