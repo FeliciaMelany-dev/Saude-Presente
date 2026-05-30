@@ -12,5 +12,69 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  ADMIN
+  PACIENTE
+}
 
+enum StatusConsulta {
+  AGENDADA
+  CONFIRMADA
+  CANCELADA
+  REALIZADA
+}
 
+model Paciente {
+  id              String     @id @default(uuid())
+  nome            String
+  telefone        String
+  email           String     @unique
+  data_nascimento DateTime
+  consultas       Consulta[]
+
+  role Role @default(PACIENTE)
+
+  createAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+  deleteAt DateTime?
+}
+
+model Medico {
+  id              String            @id @default(uuid())
+  nome            String
+  crm             String            @unique
+  especialidade   String
+  consultas       Consulta[]
+  disponibilidade Disponibilidade[]
+
+  createAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+  deleteAt DateTime?
+}
+
+model Consulta {
+  id               String         @id @default(uuid())
+  medico_id        String
+  paciente_id      String
+  dataHoraConsulta DateTime
+  status           StatusConsulta @default(AGENDADA)
+
+  medico   Medico   @relation(fields: [medico_id], references: [id])
+  paciente Paciente @relation(fields: [paciente_id], references: [id])
+
+  updatedAt DateTime @updatedAt
+  deleteAt DateTime?
+}
+
+model Disponibilidade {
+  id        String   @id @default(uuid())
+  medico_id String
+  horario   DateTime
+
+  medico Medico @relation(fields: [medico_id], references: [id])
+
+  updatedAt DateTime @updatedAt
+  deleteAt DateTime?
+}
+
+//rode as migrações e faca o adapter 
